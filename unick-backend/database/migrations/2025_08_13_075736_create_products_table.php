@@ -1,0 +1,37 @@
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+return new class extends Migration
+{
+    /**
+     * Run the migrations.
+     */
+    public function up(): void
+    {
+        Schema::create('products', function (Blueprint $table) {
+            $table->id();
+            $table->string('sku')->unique();
+            $table->string('name');
+            $table->text('description')->nullable();
+            $table->string('unit_of_measure', 32)->default('pcs');
+            $table->unsignedInteger('reorder_point')->default(0); // MRP safety stock threshold
+            $table->unsignedInteger('lead_time_days')->default(0);
+            $table->unsignedInteger('stock_on_hand')->default(0);
+            $table->unsignedInteger('stock_reserved')->default(0);
+            $table->decimal('price', 12, 2)->default(0);
+            $table->boolean('active')->default(true)->index();
+            $table->timestamps();
+        });
+    }
+
+    /**
+     * Reverse the migrations.
+     */
+    public function down(): void
+    {
+        Schema::dropIfExists('products');
+    }
+};
